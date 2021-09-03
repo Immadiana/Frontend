@@ -168,6 +168,7 @@ font-size: 3.5em;
 .submit{
     margin-top: -10px;
     color: white;
+    cursor: pointer;
 }
 
 .aboutus{

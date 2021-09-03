@@ -241,20 +241,26 @@
      <div class="contact_container">
       
     <div class="container2">
-      <form method="post" action="mailto"  >
+      <!-- <form method="post" action="mail/sendEmail.php"  > -->
         
-        <label for="fname">First Name</label>
-        <input type="text" id="fname" name="firstname" placeholder="Your name.." class="top1"><br>
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" name="firstname" placeholder="Your name.." class="top1"><br>
     
-        <label for="lname">Last Name</label>
-        <input type="text" id="lname" name="lastname" placeholder="Your last name.."class="top1"><br>
-    
-        <label for="subject" style="margin-left: 20%;">Message</label><br>
-        <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px" class="top2"></textarea><br>
-      
-        <button class="btn btn-primary submit" onclick="document.getElementById('contact-form').submit();">Submit </button>
+        <label for="lastname">Last Name</label>
+        <input type="text" id="lastname" name="lastname" placeholder="Your last name.."class="top1"><br>
 
-      </form>
+        <label for="email">email</label>
+        <input type="text" id="email" name="email" placeholder="Your email address.."class="top1"><br>
+       
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" placeholder="Subject"class="top1"><br>
+       
+        <label for="body" style="margin-left: 20%;">Message</label><br>
+        <textarea id="body" name="body" placeholder="Write something.." style="height:200px" class="top2"></textarea><br>
+      
+        <button class="btn btn-primary submit" onclick="sendEmail()">Submit </button>
+
+      <!-- </form> -->
     </div>
     
       
@@ -282,6 +288,7 @@
 
     </section>
     <script src="jquery-3.5.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
     <script>
 
@@ -314,6 +321,67 @@
           x[myIndex-1].style.display = "flex";  
           setTimeout(carousel, 7000);    
         }
+        //email function
+        function sendEmail() {
+          var firstname = $("#firstname");
+          var lastname = $("#lastname");
+          var email = $("#email")
+          var subject = $("#subject");
+          var body = $("#body");
+
+          console.log("Submitting...")
+          console.log(email.val())
+
+          if (isNotEmpty(firstname) && isNotEmpty(lastname)  && isNotEmpty(email) && isNotEmpty(subject) && isNotEmpty(body)) {
+              $.ajax({
+                 url: 'mail/sendEmail.php',
+                 method: 'POST',
+                 dataType: 'json',
+                 data: {
+                     firstname: firstname.val(),
+                     lastname: lastname.val(),
+                     email: email.val(),
+                     subject: subject.val(),
+                     body: body.val()
+                 }, success: function (response) {
+                      if (response.status == "success"){
+                        //alert('Email Has Been Sent!');
+                        swal({
+                          icon: "success",
+                          position: "top-end",
+                          type: "success",
+                          title: "Email Has Been Sent!",
+                          showConfirmButton: false,
+                          timer: 2000
+                        })
+                      }
+                          
+                      else {
+                          //alert('Please Try Again!');
+                          swal({
+                            icon: 'error',
+                            position: "top-end",
+                            type: "success",
+                            title: "Please Try Again!",
+                            showConfirmButton: false,
+                            timer: 2000
+                          })
+                          console.log(response);
+                      }
+                 }
+              });
+          }
+      }
+
+      function isNotEmpty(caller) {
+          if (caller.val() == "") {
+              caller.css('border', '1px solid red');
+              return false;
+          } else
+              caller.css('border', '');
+
+          return true;
+      }
 
        
 
